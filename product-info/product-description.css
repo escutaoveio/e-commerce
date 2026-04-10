@@ -1,0 +1,244 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #f2f2f2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: #f2f2f2;
+}
+
+.product-desc-page {
+  padding: 32px 24px 40px;
+}
+
+.product-desc-card {
+  max-width: 1160px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.product-desc-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  gap: 24px;
+}
+
+.product-desc-details,
+.product-desc-highlights,
+.product-desc-faq {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(18, 18, 18, 0.04);
+  padding: 32px;
+}
+
+.product-desc-details h1,
+.product-desc-highlights h2 {
+  margin: 0 0 24px;
+  font-size: 1.25rem;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.product-desc-details .product-desc-row {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  padding: 14px 0;
+}
+
+.product-desc-row + .product-desc-row {
+  border-top: 1px solid #e6e6e6;
+}
+
+.product-desc-divider {
+  height: 1px;
+  background: #e6e6e6;
+}
+
+.meta-label {
+  display: block;
+  color: #8c8c8c;
+  font-size: 0.625rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.meta-value {
+  display: block;
+  color: #1a1a1a;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.product-desc-note {
+  margin: 16px 0 0;
+  font-size: 0.6875rem;
+  color: #8c8c8c;
+  line-height: 1.4;
+}
+
+.product-desc-highlights {
+  background: #f5f5f5;
+}
+
+.product-desc-highlights p {
+  margin: 0 0 24px;
+  font-size: 0.9375rem;
+  color: #4d4d4d;
+  line-height: 1.6;
+}
+
+.product-desc-feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.product-desc-feature-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.product-desc-feature-list li::before {
+  content: "";
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f7e8b0;
+  color: #6a5b16;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+  content: "✓";
+}
+
+.product-desc-faq {
+  background: #f7f7f7;
+}
+
+.product-desc-faq-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.faq-icon {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #262626;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.product-desc-faq-header p {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+}
+
+.product-desc-faq-list {
+  display: grid;
+  gap: 8px;
+}
+
+details {
+  border: 0.5px solid rgba(38, 38, 38, 0.83);
+  border-radius: 7px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.667rem;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+  color: #262626;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary::after {
+  content: "▼";
+  font-size: 0.85rem;
+  transition: transform 0.2s ease;
+  color: #262626;
+}
+
+details[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  padding: 0 16px 16px;
+  font-size: 0.875rem;
+  color: #4d4d4d;
+  line-height: 1.6;
+}
+
+@media (max-width: 920px) {
+  .product-desc-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .product-desc-card {
+    gap: 18px;
+  }
+
+  .product-desc-details,
+  .product-desc-highlights,
+  .product-desc-faq {
+    padding: 24px;
+  }
+
+  .product-desc-row {
+    grid-template-columns: 120px minmax(0, 1fr);
+  }
+
+  .product-desc-page {
+    padding: 24px 16px 32px;
+  }
+}
