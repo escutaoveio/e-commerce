@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DW240 Flex — Informações Técnicas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/escutaoveio/e-commerce@main/product-info/iva-química/drylevis/styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <div class="page-content">
+        <section class="section-row">
+          <article class="panel panel--data">
+            <h1>Dados do Produto</h1>
+            <div class="data-row">
+              <span class="label">COR/TEXTURA:</span>
+              <span class="value">Pasta em cores (branco, cinza ou preto).</span>
+            </div>
+            <div class="data-row">
+              <span class="label">COMPOSIÇÃO:</span>
+              <span class="value">Selante à base de Poliuretano (sem isocianato livre e solventes)</span>
+            </div>
+            <div class="data-row">
+              <span class="label">RENDIMENTO:</span>
+              <span class="value">De 8 a 10 metros lineares, em juntas de 3mm</span>
+            </div>
+            <div class="data-row">
+              <span class="label">CONSUMO:</span>
+              <span class="value">De 8 a 10 metros lineares, em juntas de 3mm.</span>
+            </div>
+            <div class="data-row">
+              <span class="label">RENDIMENTO:</span>
+              <span class="value">De 8 a 10 metros lineares, em juntas de 3mm</span>
+            </div>
+            <p class="note">
+              *Rendimento pode variar conforme a porosidade e absorção da base ou o método de aplicação.
+            </p>
+          </article>
+
+          <article class="panel panel--highlights">
+            <h2>Destaques do Produto</h2>
+            <p>
+              O Elastment® Selante DW 240 é um selante adesivo para juntas com alto
+              desempenho, pronto para o uso, completamente elástico, ótima resistência
+              à água, vibrações, movimentações, aos raios UV e ao envelhecimento. Veda
+              e adere com rapidez e elasticidade
+            </p>
+            <ul class="feature-list">
+              <li>
+                <span class="feature-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" fill="currentColor" />
+                  </svg>
+                </span>
+                Produto pronto para o uso
+              </li>
+              <li>
+                <span class="feature-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" fill="currentColor" />
+                  </svg>
+                </span>
+                Fácil aplicação
+              </li>
+              <li>
+                <span class="feature-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" fill="currentColor" />
+                  </svg>
+                </span>
+                Alto poder de adesão
+              </li>
+            </ul>
+          </article>
+        </section>
+
+        <section class="faq-section panel">
+          <div class="faq-heading">
+            <span class="faq-title">PERGUNTAS FREQUENTES</span>
+            <span class="faq-icon">?</span>
+          </div>
+          <div class="faq-list">
+            <button class="faq-item" type="button" aria-expanded="false">
+              <span>QUAL O TEMPO TOTAL DE CURA DO DW240 FLEX?</span>
+              <span class="faq-chevron" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </button>
+            <button class="faq-item" type="button" aria-expanded="false">
+              <span>QUAL O TEMPO TOTAL DE CURA DO DW240 FLEX?</span>
+              <span class="faq-chevron" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </button>
+            <button class="faq-item" type="button" aria-expanded="false">
+              <span>QUAL O TEMPO TOTAL DE CURA DO DW240 FLEX?</span>
+              <span class="faq-chevron" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/gh/escutaoveio/e-commerce@main/product-info/iva-química/drylevis/script.js"></script>
+  </body>
+</html>
