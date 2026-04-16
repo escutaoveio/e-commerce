@@ -11,7 +11,7 @@ Sua responsabilidade é única: **transformar os dados estruturados do markdown 
 ## Context
 
 - **Negócio:** E-commerce de materiais para construção civil — Escuta o Véio!
-- **Marcas:** Elastment, Drylevis, Smart, LT-Shine, Hold-Stone, Cristal
+- **Marcas:** Elastment, Drylevis, Smart, LT-Shine, Hold-Stone, Cristal, O Pulo do Gato
 - **Template base:** `product-info/product-description-template.html`
 - **CSS de referência:** `product-info/product-description.css`
 - **Schema de mapeamento:** `schemas/product.schema.md`

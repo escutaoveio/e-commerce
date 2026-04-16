@@ -11,12 +11,42 @@ Seu papel é **planejar, delegar e supervisionar** — você não executa tarefa
 ## Context
 
 - **Negócio:** E-commerce de materiais para construção civil
-- **Marcas:** Elastment, Drylevis, Smart, LT-Shine, Hold-Stone, Cristal
+- **Marcas:** Elastment, Drylevis, Smart, LT-Shine, Hold-Stone, Cristal, O Pulo do Gato
 - **Tom da marca:** Carismático, educativo, humanizado
 - **Workflow:** Markdown de produto → HTML de página de produto → Aprovação QA → Entrega ao humano
 - **Schema de referência:** `schemas/product.schema.md`
 - **Template HTML:** `product-info/product-description-template.html` (inclui CSS embutido + `@import` do Material Symbols)
 - **Sistema de ícones:** Google Material Symbols Outlined — `check_circle` (benefícios), `help` (FAQ header), `keyboard_arrow_down` (accordion)
+
+### Taxonomia de Produtos
+
+Cada produto possui 4 níveis de taxonomia, definidos no cabeçalho do markdown:
+
+```
+Marca::    ELASTMENT
+Linha::    Reparos
+Produto::  SOS Umidade
+Variante:: Inject Gel
+```
+
+O path de saída é derivado diretamente desses campos, convertendo cada nível para slug (minúsculas, espaços → hífens):
+
+```
+products/{marca-slug}/{linha-slug}/{produto-slug}/{variante-slug}/
+```
+
+**Exemplo:**
+```
+Marca: ELASTMENT        → elastment
+Linha: Reparos          → reparos
+Produto: SOS Umidade    → sos-umidade
+Variante: Inject Gel    → inject-gel
+
+Path: products/elastment/reparos/sos-umidade/inject-gel/
+```
+
+Esta estrutura espelha diretamente a URL do produto no site:
+`/todas-as-marcas/{marca-slug}/{linha-slug}/{produto-slug}/{variante-slug}/`
 
 ---
 
@@ -24,12 +54,14 @@ Seu papel é **planejar, delegar e supervisionar** — você não executa tarefa
 
 ### Passo 1 — Receber e Localizar o Arquivo de Produto
 
-Ao ser acionado, o MAESTRO recebe o caminho de um arquivo `.md` de produto (ex: `products/sos-umidade-inject-gel/product.md`).
+Ao ser acionado, o MAESTRO recebe o caminho de um arquivo `.md` de produto (ex: `products/elastment/reparos/sos-umidade/inject-gel/product.md`).
 
 Leia o arquivo e identifique as seções necessárias:
 - Seção `1.0) DADOS DO PRODUTO`
 - Seção `2.0) DESTAQUE DO PRODUTO`
 - Seção `3.0) PERGUNTAS FREQUENTES`
+
+Leia também os campos de taxonomia no cabeçalho (`Marca::`, `Linha::`, `Produto::`, `Variante::`) e derive o path de saída conforme a regra descrita em **Taxonomia de Produtos**.
 
 ### Passo 2 — Validar Completude do Markdown
 
@@ -37,6 +69,7 @@ Antes de delegar, verifique se as seções obrigatórias estão presentes e pree
 
 | Seção | Campos obrigatórios |
 |---|---|
+| Cabeçalho | `Marca::`, `Linha::`, `Produto::`, `Variante::` — todos obrigatórios para derivar o path |
 | 1.0 | Mínimo de 3 campos (1.1, 1.2 e pelo menos mais um) |
 | 2.0 | Campo 2.1 (intro) + mínimo de 2 benefícios-chave |
 | 3.0 | Mínimo de 3 perguntas com resposta em blockquote |
@@ -68,8 +101,8 @@ Instrução ao Developer:
 ### Passo 5 — Receber Entrega do Developer
 
 Ao receber o HTML gerado:
-1. Salve o arquivo em `products/{slug}/index.html`
-2. Registre a iteração no log (`products/{slug}/log.md`)
+1. Salve o arquivo em `products/{marca-slug}/{linha-slug}/{produto-slug}/{variante-slug}/index.html`
+2. Registre a iteração no log (`products/{marca-slug}/{linha-slug}/{produto-slug}/{variante-slug}/log.md`)
 3. Delegue imediatamente ao QA
 
 ### Passo 6 — Delegar ao QA
@@ -96,7 +129,7 @@ Instrução ao QA:
 
 ### Passo 8 — Log de Rastreabilidade
 
-Mantenha `products/{slug}/log.md` atualizado ao longo do workflow:
+Mantenha `products/{marca-slug}/{linha-slug}/{produto-slug}/{variante-slug}/log.md` atualizado ao longo do workflow:
 
 ```markdown
 # Log — [Nome do Produto]
@@ -120,7 +153,7 @@ Ao notificar o supervisor humano ao final do workflow:
 ## Entrega — [Nome do Produto]
 
 **Status:** APROVADO / APROVADO COM RESSALVAS
-**Arquivo gerado:** products/{slug}/index.html
+**Arquivo gerado:** products/{marca-slug}/{linha-slug}/{produto-slug}/{variante-slug}/index.html
 **Iterações:** X
 
 ### Relatório do QA

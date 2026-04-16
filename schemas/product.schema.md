@@ -6,6 +6,37 @@ Este documento define quais campos do arquivo `.md` de produto são usados pelo 
 
 ---
 
+## Taxonomia e Path de Saída
+
+Cada produto possui 4 campos de taxonomia obrigatórios no cabeçalho do markdown. O MAESTRO os usa para derivar o path de saída dos arquivos gerados.
+
+| Campo no Markdown | Exemplo | Slug gerado |
+|---|---|---|
+| `Marca::` | `ELASTMENT` | `elastment` |
+| `Linha::` | `Reparos` | `reparos` |
+| `Produto::` | `SOS Umidade` | `sos-umidade` |
+| `Variante::` | `Inject Gel` | `inject-gel` |
+
+**Regra de slug:** minúsculas, espaços substituídos por hífens, caracteres especiais removidos.
+
+**Path de saída:**
+```
+products/{marca-slug}/{linha-slug}/{produto-slug}/{variante-slug}/
+```
+
+**Exemplo completo:**
+```
+products/elastment/reparos/sos-umidade/inject-gel/
+├── product.md    ← input: dados do produto
+├── index.html    ← output: HTML gerado pelo Developer
+└── log.md        ← rastreabilidade das iterações
+```
+
+Esta estrutura espelha diretamente a URL do produto no site:
+`/todas-as-marcas/elastment/reparos/sos-umidade/inject-gel/`
+
+---
+
 ## Mapeamento: Markdown → HTML Template
 
 ### Seção 1.0 — DADOS DO PRODUTO
