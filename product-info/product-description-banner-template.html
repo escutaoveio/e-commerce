@@ -2,7 +2,7 @@
 
   <style>
     /* Source: https://raw.githubusercontent.com/escutaoveio/e-commerce/main/product-info/product-description.css */
-    /* Variant: banner — adiciona banner no topo */
+    /* Variant: banner — adiciona banner no topo + bloco de nova embalagem no rodapé */
     @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
 
     .material-symbols-outlined {
@@ -245,6 +245,79 @@
       object-fit: cover;
     }
 
+    /* ─── Nova Embalagem ─────────────────────────────────────────────────────
+       Imagens fonte: 1080 × 1080px (1:1)
+       Exibidas em grid 2 colunas, responsivas via width: 100%
+    ──────────────────────────────────────────────────────────────────────── */
+    .product-desc-packaging {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 1px 2px rgba(18, 18, 18, 0.04);
+      padding: 32px;
+    }
+
+    .product-desc-packaging h2 {
+      margin: 0 0 8px;
+      font-size: 1.25rem;
+      line-height: 1.1;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .product-desc-packaging-intro {
+      margin: 0 0 24px;
+      font-size: 0.9375rem;
+      color: #4d4d4d;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .product-desc-packaging-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 50%;
+      margin: 0 auto;
+    }
+
+    .product-desc-packaging-item {
+      margin: 0;
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #f0f0f0;
+      aspect-ratio: 1 / 1;
+    }
+
+    .product-desc-packaging-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .product-desc-packaging-tag {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .product-desc-packaging-tag--before {
+      background: rgba(230, 230, 230, 0.92);
+      color: #4d4d4d;
+    }
+
+    .product-desc-packaging-tag--after {
+      background: rgba(26, 26, 26, 0.88);
+      color: #ffffff;
+    }
+
     @media (max-width: 920px) {
       .product-desc-grid {
         grid-template-columns: 1fr;
@@ -258,7 +331,8 @@
 
       .product-desc-details,
       .product-desc-highlights,
-      .product-desc-faq {
+      .product-desc-faq,
+      .product-desc-packaging {
         padding: 24px;
       }
 
@@ -271,21 +345,26 @@
       .product-desc-page {
         padding: 24px 16px 32px;
       }
+
+      .product-desc-packaging-grid {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+      }
     }
   </style>
 
   <div class="product-desc-card">
 
     <!-- ─── Banner ─────────────────────────────────────────────────────────
-         Desktop : banner_232x160px_product-info_promoção-elastment-sos-umidade-inject-gel.jpg
-         Mobile  : banner_640x320px_product-info_promoção-elastment-sos-umidade-inject-gel.jpg
+         Desktop : substitua banner-desktop.jpg  →  1160 × 160px
+         Mobile  : substitua banner-mobile.jpg   →   640 × 320px
     ──────────────────────────────────────────────────────────────────────── -->
     <div class="product-desc-banner">
       <picture>
-        <source media="(max-width: 640px)" srcset="banner_640x320px_product-info_promoção-elastment-sos-umidade-inject-gel.jpg">
+        <source media="(max-width: 640px)" srcset="banner-mobile.jpg">
         <img
-          src="banner_232x160px_product-info_promoção-elastment-sos-umidade-inject-gel.jpg"
-          alt="Promoção SOS Umidade Inject Gel Elastment — Em compras acima de 5 unidades, ganhe"
+          src="banner-desktop.jpg"
+          alt="Banner [Nome do Produto]"
           class="product-desc-banner-img"
           width="1160"
           height="160"
@@ -294,59 +373,48 @@
     </div>
 
     <div class="product-desc-grid">
-
       <div class="product-desc-details">
         <h1>Dados do Produto</h1>
         <div class="product-desc-row">
           <span class="meta-label">COR/TEXTURA:</span>
-          <span class="meta-value">Creme levemente amarelado / textura de gel (creme)</span>
+          <span class="meta-value">Pasta em cores (branco, cinza ou preto).</span>
         </div>
         <div class="product-desc-divider"></div>
         <div class="product-desc-row">
           <span class="meta-label">COMPOSIÇÃO:</span>
-          <span class="meta-value">Emulsão aquosa de silicone</span>
-        </div>
-        <div class="product-desc-divider"></div>
-        <div class="product-desc-row">
-          <span class="meta-label">CONSUMO:</span>
-          <span class="meta-value">80g – 100g por metro linear (furos de 8mm de diâmetro e profundidade de 8cm)</span>
-        </div>
-        <div class="product-desc-divider"></div>
-        <div class="product-desc-row">
-          <span class="meta-label">TEMPO DE CURA:</span>
-          <span class="meta-value">7 a 30 dias (variação conforme umidade da superfície e condições ambientais)</span>
+          <span class="meta-value">Selante à base de Poliuretano (sem isocianato livre e solventes)</span>
         </div>
         <div class="product-desc-divider"></div>
         <div class="product-desc-row">
           <span class="meta-label">RENDIMENTO:</span>
-          <span class="meta-value">2,5m a 3m lineares (furos de 7mm, profundidade 7cm) / 2,0m a 2,5m lineares (furos de 12,5mm–13mm, profundidade 7cm)</span>
+          <span class="meta-value">De 8 a 10 metros lineares, em juntas de 3mm</span>
+        </div>
+        <div class="product-desc-divider"></div>
+        <div class="product-desc-row">
+          <span class="meta-label">CONSUMO:</span>
+          <span class="meta-value">De 8 a 10 metros lineares, em juntas de 3mm.</span>
         </div>
         <p class="product-desc-note">*Rendimento pode variar conforme a porosidade e absorção da base ou o método de aplicação.</p>
       </div>
 
       <div class="product-desc-highlights">
         <h2>Destaques do Produto</h2>
-        <p>Barreira injetável contra umidade ascendente em alvenaria, tufo e concreto — sem solventes, sem obra invasiva, com proteção de longa duração.</p>
+        <p>O Elastment® Selante DW 240 é um selante adesivo para juntas com alto desempenho, pronto para o uso, completamente elástico, ótima resistência à água, vibrações, movimentações, aos raios UV e ao envelhecimento. Veda e adere com rapidez e elasticidade.</p>
         <ul class="product-desc-feature-list">
           <li>
             <span class="material-symbols-outlined product-desc-feature-icon" aria-hidden="true">check_circle</span>
-            Bloqueia a umidade capilar ascendente formando uma barreira química nos poros dos minerais
+            Produto pronto para o uso
           </li>
           <li>
             <span class="material-symbols-outlined product-desc-feature-icon" aria-hidden="true">check_circle</span>
-            Não altera a respirabilidade do sistema — permite passagem de vapor sem comprometer a vedação
+            Alto poder de adesão
           </li>
           <li>
             <span class="material-symbols-outlined product-desc-feature-icon" aria-hidden="true">check_circle</span>
-            Livre de solventes e pronto para uso — não requer diluição ou preparo especial
-          </li>
-          <li>
-            <span class="material-symbols-outlined product-desc-feature-icon" aria-hidden="true">check_circle</span>
-            Penetra profundamente no substrato com proteção hidrofóbica de longa duração
+            Fácil aplicação
           </li>
         </ul>
       </div>
-
     </div>
 
     <div class="product-desc-faq">
@@ -354,42 +422,63 @@
         <span class="material-symbols-outlined faq-icon" aria-hidden="true">help</span>
         <p>Perguntas Frequentes</p>
       </div>
+
       <div class="product-desc-faq-list">
         <details>
           <summary>
-            O SOS UMIDADE INJECT GEL PODE SER APLICADO EM QUALQUER TIPO DE PAREDE?
+            QUAL O TEMPO TOTAL DE CURA DO DW240 FLEX?
             <span class="material-symbols-outlined accordion-icon" aria-hidden="true">keyboard_arrow_down</span>
           </summary>
-          <div class="faq-answer">Não. O produto não deve ser usado em superfícies esmaltadas, vitrificadas, não porosas, com tinta, manta asfáltica/acrílica ou resinas. É indicado para alvenaria, tufo e concreto poroso com umidade ascendente.</div>
+          <div class="faq-answer">O tempo de cura total do DW240 Flex depende da temperatura e umidade, mas geralmente varia entre 24 e 48 horas.</div>
         </details>
         <details>
           <summary>
-            PRECISO DILUIR O PRODUTO ANTES DA APLICAÇÃO?
+            QUAL O TEMPO TOTAL DE CURA DO DW240 FLEX?
             <span class="material-symbols-outlined accordion-icon" aria-hidden="true">keyboard_arrow_down</span>
           </summary>
-          <div class="faq-answer">Não. O SOS Umidade Inject Gel é um produto pronto para uso. Não é necessário diluir.</div>
+          <div class="faq-answer">O tempo de cura total do DW240 Flex depende da temperatura e umidade, mas geralmente varia entre 24 e 48 horas.</div>
         </details>
         <details>
           <summary>
-            QUANTO TEMPO LEVA PARA O PRODUTO CURAR COMPLETAMENTE?
+            QUAL O TEMPO TOTAL DE CURA DO DW240 FLEX?
             <span class="material-symbols-outlined accordion-icon" aria-hidden="true">keyboard_arrow_down</span>
           </summary>
-          <div class="faq-answer">O tempo de cura varia de 7 a 30 dias, dependendo do nível de umidade da superfície e das condições ambientais do local.</div>
+          <div class="faq-answer">O tempo de cura total do DW240 Flex depende da temperatura e umidade, mas geralmente varia entre 24 e 48 horas.</div>
         </details>
-        <details>
-          <summary>
-            POSSO APLICAR O REBOCO LOGO APÓS A INJEÇÃO?
-            <span class="material-symbols-outlined accordion-icon" aria-hidden="true">keyboard_arrow_down</span>
-          </summary>
-          <div class="faq-answer">Não. É recomendável aguardar 7 dias após a aplicação para aplicar o reboco, facilitando a evaporação da umidade remanescente no substrato.</div>
-        </details>
-        <details>
-          <summary>
-            QUAL EQUIPAMENTO É NECESSÁRIO PARA APLICAR O PRODUTO?
-            <span class="material-symbols-outlined accordion-icon" aria-hidden="true">keyboard_arrow_down</span>
-          </summary>
-          <div class="faq-answer">Pistola para cartuchos, estilete para cortar o bico, furadeira elétrica e broca diamantada para concreto (8mm para furos menores, 12,5mm–13mm para juntas maiores).</div>
-        </details>
+      </div>
+    </div>
+
+    <!-- ─── Nova Embalagem ─────────────────────────────────────────────────
+         Imagens fonte: 1080 × 1080px (1:1)
+         Substitua os atributos src pelas URLs finais das imagens.
+    ──────────────────────────────────────────────────────────────────────── -->
+    <div class="product-desc-packaging">
+      <h2>Nova Embalagem</h2>
+      <p class="product-desc-packaging-intro">Texto descritivo sobre a nova embalagem do produto.</p>
+      <div class="product-desc-packaging-grid">
+
+        <figure class="product-desc-packaging-item">
+          <img
+            src=""
+            alt="Embalagem anterior do [Nome do Produto]"
+            class="product-desc-packaging-img"
+            width="1080"
+            height="1080"
+          >
+          <span class="product-desc-packaging-tag product-desc-packaging-tag--before">Antes</span>
+        </figure>
+
+        <figure class="product-desc-packaging-item">
+          <img
+            src=""
+            alt="Nova embalagem do [Nome do Produto]"
+            class="product-desc-packaging-img"
+            width="1080"
+            height="1080"
+          >
+          <span class="product-desc-packaging-tag product-desc-packaging-tag--after">Agora</span>
+        </figure>
+
       </div>
     </div>
 
