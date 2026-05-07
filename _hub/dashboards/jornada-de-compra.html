@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jornada de Compra — EOV / IVA</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: #080c18; color: #e2e8f0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; }
+
+    .header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 32px; border-bottom: 1px solid #151e30;
+    }
+    .header h1 { font-size: 17px; font-weight: 700; color: #f1f5ff; letter-spacing: -0.3px; }
+    .header .sub { font-size: 11px; color: #475569; margin-top: 3px; }
+    .header .total { font-size: 12px; color: #475569; }
+    .header .total span { color: #60a5fa; font-weight: 700; }
+
+    .kpis { display: flex; gap: 12px; padding: 16px 32px; flex-wrap: wrap; }
+    .kpi {
+      background: #0d1424; border: 1px solid #151e30; border-radius: 10px;
+      padding: 12px 18px; flex: 1; min-width: 120px;
+    }
+    .kpi .val { font-size: 20px; font-weight: 700; color: #60a5fa; line-height: 1.2; }
+    .kpi .lbl { font-size: 10px; color: #475569; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.6px; }
+
+    .filters { display: flex; gap: 8px; padding: 0 32px 14px; flex-wrap: wrap; }
+    .btn {
+      padding: 5px 14px; border-radius: 20px; border: 1px solid #1e2a40;
+      background: transparent; color: #64748b; font-size: 12px; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn:hover { border-color: #60a5fa; color: #60a5fa; }
+    .btn.active { background: #1d4ed8; border-color: #3b82f6; color: #fff; }
+
+    #chart-wrap { padding: 0 32px 32px; overflow-x: auto; }
+
+    .link { fill: none; transition: stroke-opacity 0.18s; cursor: default; }
+    .node-label { font-size: 11px; fill: #94a3b8; pointer-events: none; }
+    .node-value { font-size: 9px; fill: rgba(255,255,255,0.65); pointer-events: none; text-anchor: middle; }
+    .stage-hdr { font-size: 10px; fill: #334155; text-anchor: middle; letter-spacing: 0.7px; }
+
+    #tt {
+      position: fixed; background: #0d1424ee; border: 1px solid #1e2a40;
+      border-radius: 8px; padding: 10px 14px; font-size: 12px;
+      pointer-events: none; z-index: 999; display: none;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.7); max-width: 230px;
+    }
+    #tt .tt-title { font-weight: 600; color: #f1f5ff; margin-bottom: 5px; line-height: 1.4; }
+    #tt .tt-val   { color: #60a5fa; font-size: 15px; font-weight: 700; }
+    #tt .tt-pct   { color: #475569; font-size: 11px; margin-top: 3px; }
+
+    .node-g { cursor: pointer; }
+    .node-g:hover .node-rect { opacity: 1 !important; }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div>
+    <h1>Jornada de Compra</h1>
+    <div class="sub">Fluxo de aquisição · EOV / IVA · Dados demonstrativos — clique em nó ou botão para filtrar</div>
+  </div>
+  <div class="total">Total de contatos: <span id="kpi-total">—</span></div>
+</header>
+
+<div class="kpis">
+  <div class="kpi"><div class="val" id="kv-eov">—</div><div class="lbl">Resultado EOV</div></div>
+  <div class="kpi"><div class="val" id="kv-iva">—</div><div class="lbl">Resultado IVA</div></div>
+  <div class="kpi"><div class="val" id="kv-wp">—</div><div class="lbl">Via WhatsApp</div></div>
+  <div class="kpi"><div class="val" id="kv-site">—</div><div class="lbl">Via Site</div></div>
+  <div class="kpi"><div class="val" id="kv-pronto">—</div><div class="lbl">Pronto p/ Comprar</div></div>
+  <div class="kpi"><div class="val" style="color:#4ade80" id="kv-conv">—%</div><div class="lbl">Taxa de Conversão</div></div>
+</div>
+
+<div class="filters">
+  <button class="btn active" data-f="all">Todos os fluxos</button>
+  <button class="btn" data-f="eov">→ EOV</button>
+  <button class="btn" data-f="iva">→ IVA</button>
+  <button class="btn" data-f="whatsapp">Via WhatsApp</button>
+  <button class="btn" data-f="site">Via Site</button>
+  <button class="btn" data-f="pronto">Pronto p/ Comprar</button>
+  <button class="btn" data-f="profissional">Profissional Construção</button>
+  <button class="btn" data-f="construtoras">Construtoras e Obras</button>
+  <button class="btn" data-f="dm">Via DM</button>
+  <button class="btn" data-f="paid">Tráfego Pago</button>
+</div>
+
+<div id="chart-wrap"><svg id="sankey-svg"></svg></div>
+<div id="tt"></div>
+
+<script>
+// ── Dimensions ────────────────────────────────────────────────────────────────
+const W  = Math.max((window.innerWidth || 1400) - 64, 1260);
+const H  = 720;
+const ML = 190, MR = 190, MT = 44, MB = 20;
+const NUM_STAGES = 6;
+const STAGES = ["Origem", "Canal de Entrada", "Plataforma", "Tipo de Cliente", "Intenção", "Resultado"];
+
+// ── Nodes ─────────────────────────────────────────────────────────────────────
+const rawNodes = [
+  // 0 — Origens
+  { id: "inst_fb",     label: "Instagram / Facebook",              stage: 0, color: "#E1306C" },
+  { id: "content",     label: "Pinterest · TikTok · YouTube · LinkedIn", stage: 0, color: "#4A90D9" },
+  { id: "broadcast",   label: "Canais de Transmissão",             stage: 0, color: "#06B6D4" },
+  { id: "organic",     label: "Tráfego Orgânico",                  stage: 0, color: "#22C55E" },
+  { id: "events",      label: "Eventos · Bebee · LinkedIn ADS",    stage: 0, color: "#F59E0B" },
+  // 1 — Canais
+  { id: "dm",          label: "DM",                                stage: 1, color: "#A855F7" },
+  { id: "linktree",    label: "Linktree",                          stage: 1, color: "#34D399" },
+  { id: "google",      label: "Google (GMN)",                      stage: 1, color: "#EF4444" },
+  { id: "atv_wp",      label: "Ativação WhatsApp",                 stage: 1, color: "#25D366" },
+  { id: "atv_email",   label: "Ativação E-mail",                   stage: 1, color: "#3B82F6" },
+  { id: "atv_com",     label: "Ativação Comercial",                stage: 1, color: "#F97316" },
+  { id: "paid",        label: "Tráfego Pago",                      stage: 1, color: "#EC4899" },
+  // 2 — Plataformas
+  { id: "whatsapp",    label: "WhatsApp",                          stage: 2, color: "#25D366" },
+  { id: "site",        label: "Site",                              stage: 2, color: "#60A5FA" },
+  // 3 — Tipos de Cliente
+  { id: "profissional",  label: "Profissional da Construção",      stage: 3, color: "#F97316" },
+  { id: "cliente_final", label: "Cliente Final",                   stage: 3, color: "#3B82F6" },
+  { id: "industria",     label: "Indústria / Fabricantes",         stage: 3, color: "#A855F7" },
+  { id: "construtoras",  label: "Construtoras e Obras",            stage: 3, color: "#EF4444" },
+  { id: "varejo",        label: "Varejo",                          stage: 3, color: "#14B8A6" },
+  { id: "homecenter",    label: "Home Center",                     stage: 3, color: "#F59E0B" },
+  { id: "ecomm",         label: "E-commerce",                      stage: 3, color: "#22C55E" },
+  { id: "export",        label: "Exportações",                     stage: 3, color: "#60A5FA" },
+  // 4 — Intenção
+  { id: "pronto",      label: "Pronto para Comprar",               stage: 4, color: "#4ADE80" },
+  { id: "orcamento",   label: "Orçamento",                         stage: 4, color: "#60A5FA" },
+  { id: "pesquisa",    label: "Pesquisa",                          stage: 4, color: "#FBBF24" },
+  { id: "curiosidade", label: "Só Curiosidade",                    stage: 4, color: "#64748B" },
+  // 5 — Resultado
+  { id: "eov",         label: "EOV",                               stage: 5, color: "#F59E0B" },
+  { id: "iva",         label: "IVA",                               stage: 5, color: "#4ADE80" },
+];
+
+// ── Links ─────────────────────────────────────────────────────────────────────
+const rawLinks = [
+  // Origens → Canais
+  { source: "inst_fb",    target: "dm",        value: 320 },
+  { source: "content",    target: "dm",        value: 180 },
+  { source: "content",    target: "linktree",  value: 120 },
+  { source: "broadcast",  target: "dm",        value: 100 },
+  { source: "organic",    target: "google",    value: 160 },
+  { source: "events",     target: "atv_wp",    value: 90  },
+  { source: "events",     target: "atv_email", value: 70  },
+  { source: "events",     target: "atv_com",   value: 80  },
+  { source: "events",     target: "paid",      value: 110 },
+  // Canais → Plataformas
+  { source: "dm",         target: "whatsapp",  value: 440 },
+  { source: "dm",         target: "site",      value: 160 },
+  { source: "linktree",   target: "whatsapp",  value: 55  },
+  { source: "linktree",   target: "site",      value: 65  },
+  { source: "google",     target: "whatsapp",  value: 60  },
+  { source: "google",     target: "site",      value: 100 },
+  { source: "atv_wp",     target: "whatsapp",  value: 90  },
+  { source: "atv_email",  target: "whatsapp",  value: 35  },
+  { source: "atv_email",  target: "site",      value: 35  },
+  { source: "atv_com",    target: "whatsapp",  value: 55  },
+  { source: "atv_com",    target: "site",      value: 25  },
+  { source: "paid",       target: "site",      value: 110 },
+  // Plataformas → Tipos de Cliente
+  { source: "whatsapp",   target: "profissional",  value: 220 },
+  { source: "whatsapp",   target: "cliente_final", value: 155 },
+  { source: "whatsapp",   target: "industria",     value: 50  },
+  { source: "whatsapp",   target: "construtoras",  value: 165 },
+  { source: "whatsapp",   target: "varejo",        value: 75  },
+  { source: "whatsapp",   target: "homecenter",    value: 55  },
+  { source: "whatsapp",   target: "ecomm",         value: 30  },
+  { source: "whatsapp",   target: "export",        value: 20  },
+  { source: "site",       target: "profissional",  value: 125 },
+  { source: "site",       target: "cliente_final", value: 100 },
+  { source: "site",       target: "industria",     value: 40  },
+  { source: "site",       target: "construtoras",  value: 90  },
+  { source: "site",       target: "varejo",        value: 58  },
+  { source: "site",       target: "homecenter",    value: 48  },
+  { source: "site",       target: "ecomm",         value: 80  },
+  { source: "site",       target: "export",        value: 40  },
+  // Tipos → Intenção
+  { source: "profissional",   target: "pronto",     value: 155 },
+  { source: "profissional",   target: "orcamento",  value: 130 },
+  { source: "profissional",   target: "pesquisa",   value: 42  },
+  { source: "profissional",   target: "curiosidade",value: 18  },
+  { source: "cliente_final",  target: "pronto",     value: 88  },
+  { source: "cliente_final",  target: "orcamento",  value: 98  },
+  { source: "cliente_final",  target: "pesquisa",   value: 95  },
+  { source: "cliente_final",  target: "curiosidade",value: 74  },
+  { source: "industria",      target: "pronto",     value: 38  },
+  { source: "industria",      target: "orcamento",  value: 36  },
+  { source: "industria",      target: "pesquisa",   value: 12  },
+  { source: "industria",      target: "curiosidade",value: 4   },
+  { source: "construtoras",   target: "pronto",     value: 125 },
+  { source: "construtoras",   target: "orcamento",  value: 108 },
+  { source: "construtoras",   target: "pesquisa",   value: 18  },
+  { source: "construtoras",   target: "curiosidade",value: 4   },
+  { source: "varejo",         target: "pronto",     value: 52  },
+  { source: "varejo",         target: "orcamento",  value: 48  },
+  { source: "varejo",         target: "pesquisa",   value: 22  },
+  { source: "varejo",         target: "curiosidade",value: 11  },
+  { source: "homecenter",     target: "pronto",     value: 44  },
+  { source: "homecenter",     target: "orcamento",  value: 38  },
+  { source: "homecenter",     target: "pesquisa",   value: 14  },
+  { source: "homecenter",     target: "curiosidade",value: 7   },
+  { source: "ecomm",          target: "pronto",     value: 50  },
+  { source: "ecomm",          target: "orcamento",  value: 38  },
+  { source: "ecomm",          target: "pesquisa",   value: 14  },
+  { source: "ecomm",          target: "curiosidade",value: 8   },
+  { source: "export",         target: "pronto",     value: 32  },
+  { source: "export",         target: "orcamento",  value: 22  },
+  { source: "export",         target: "pesquisa",   value: 6   },
+  // Intenção → Resultado
+  { source: "pronto",     target: "eov", value: 350 },
+  { source: "pronto",     target: "iva", value: 234 },
+  { source: "orcamento",  target: "eov", value: 300 },
+  { source: "orcamento",  target: "iva", value: 218 },
+  { source: "pesquisa",   target: "eov", value: 105 },
+  { source: "pesquisa",   target: "iva", value: 118 },
+  { source: "curiosidade",target: "eov", value: 58  },
+  { source: "curiosidade",target: "iva", value: 68  },
+];
+
+// ── Sankey layout ─────────────────────────────────────────────────────────────
+const sk = d3.sankey()
+  .nodeId(d => d.id)
+  .nodeAlign(d3.sankeyLeft)
+  .nodeWidth(18)
+  .nodePadding(9)
+  .extent([[ML, MT], [W - MR, H - MB]]);
+
+const graph = sk({
+  nodes: rawNodes.map(d => ({ ...d })),
+  links: rawLinks.map(d => ({ ...d }))
+});
+const { nodes, links } = graph;
+
+// Force x positions by stage
+const stageX = {};
+for (let i = 0; i < NUM_STAGES; i++) {
+  stageX[i] = ML + i * ((W - ML - MR) / (NUM_STAGES - 1));
+}
+nodes.forEach(n => {
+  n.x0 = stageX[n.stage];
+  n.x1 = n.x0 + sk.nodeWidth();
+});
+sk.update(graph);
+
+// ── KPIs ─────────────────────────────────────────────────────────────────────
+const byId = {};
+nodes.forEach(n => { byId[n.id] = n; });
+
+const totalVal  = nodes.filter(n => n.stage === 0).reduce((s, n) => s + n.value, 0);
+const eovVal    = byId.eov?.value   || 0;
+const ivaVal    = byId.iva?.value   || 0;
+const wpVal     = byId.whatsapp?.value || 0;
+const siteVal   = byId.site?.value  || 0;
+const prontoVal = byId.pronto?.value || 0;
+const convPct   = ((eovVal + ivaVal) / totalVal * 100).toFixed(1);
+
+document.getElementById("kpi-total").textContent  = totalVal.toLocaleString("pt-BR");
+document.getElementById("kv-eov").textContent     = eovVal.toLocaleString("pt-BR");
+document.getElementById("kv-iva").textContent     = ivaVal.toLocaleString("pt-BR");
+document.getElementById("kv-wp").textContent      = wpVal.toLocaleString("pt-BR");
+document.getElementById("kv-site").textContent    = siteVal.toLocaleString("pt-BR");
+document.getElementById("kv-pronto").textContent  = prontoVal.toLocaleString("pt-BR");
+document.getElementById("kv-conv").textContent    = convPct + "%";
+
+// ── SVG ───────────────────────────────────────────────────────────────────────
+const svg = d3.select("#sankey-svg")
+  .attr("width", W)
+  .attr("height", H);
+
+// Stage headers
+STAGES.forEach((lbl, i) => {
+  svg.append("text")
+    .attr("class", "stage-hdr")
+    .attr("x", stageX[i] + sk.nodeWidth() / 2)
+    .attr("y", 26)
+    .text(lbl.toUpperCase());
+});
+
+// Links
+const linkSel = svg.append("g").attr("class", "links-g")
+  .selectAll("path")
+  .data(links)
+  .join("path")
+    .attr("class", "link")
+    .attr("d", d3.sankeyLinkHorizontal())
+    .attr("stroke", d => d.source.color)
+    .attr("stroke-width", d => Math.max(1, d.width))
+    .attr("stroke-opacity", 0.25);
+
+// Node groups
+const nodeSel = svg.append("g").attr("class", "nodes-g")
+  .selectAll("g")
+  .data(nodes)
+  .join("g")
+    .attr("class", "node-g");
+
+nodeSel.append("rect")
+  .attr("class", "node-rect")
+  .attr("x", d => d.x0)
+  .attr("y", d => d.y0)
+  .attr("width",  d => d.x1 - d.x0)
+  .attr("height", d => Math.max(2, d.y1 - d.y0))
+  .attr("fill",   d => d.color)
+  .attr("rx", 3)
+  .attr("opacity", 0.88);
+
+// Text labels (outside nodes)
+nodeSel.append("text")
+  .attr("class", "node-label")
+  .attr("x", d => d.stage === 0 ? d.x0 - 7 : d.x1 + 7)
+  .attr("y", d => (d.y0 + d.y1) / 2)
+  .attr("dy", "0.35em")
+  .attr("text-anchor", d => d.stage === 0 ? "end" : "start")
+  .style("font-size", d => {
+    const h = d.y1 - d.y0;
+    return h >= 20 ? "11px" : h >= 11 ? "9.5px" : "8.5px";
+  })
+  .text(d => d.label);
+
+// Value inside node
+nodeSel.append("text")
+  .attr("class", "node-value")
+  .attr("x", d => (d.x0 + d.x1) / 2)
+  .attr("y", d => (d.y0 + d.y1) / 2)
+  .attr("dy", "0.35em")
+  .text(d => (d.y1 - d.y0) >= 22 ? d.value.toLocaleString("pt-BR") : "");
+
+// ── Tooltip ───────────────────────────────────────────────────────────────────
+const tt = document.getElementById("tt");
+
+function showTT(ev, html) {
+  tt.style.display = "block";
+  tt.innerHTML = html;
+  placeTT(ev);
+}
+function placeTT(ev) {
+  const x = Math.min(ev.clientX + 14, window.innerWidth - 244);
+  const y = Math.max(ev.clientY - 8, 6);
+  tt.style.left = x + "px";
+  tt.style.top  = y + "px";
+}
+function hideTT() { tt.style.display = "none"; }
+
+linkSel
+  .on("mousemove", (ev, d) => {
+    const pct = ((d.value / totalVal) * 100).toFixed(1);
+    showTT(ev, `
+      <div class="tt-title">${d.source.label}<br>→ ${d.target.label}</div>
+      <div class="tt-val">${d.value.toLocaleString("pt-BR")} contatos</div>
+      <div class="tt-pct">${pct}% do total de entradas</div>
+    `);
+  })
+  .on("mouseleave", hideTT);
+
+nodeSel
+  .on("mousemove", (ev, d) => {
+    const pct = ((d.value / totalVal) * 100).toFixed(1);
+    showTT(ev, `
+      <div class="tt-title">${d.label}</div>
+      <div class="tt-val">${d.value.toLocaleString("pt-BR")} contatos</div>
+      <div class="tt-pct">${pct}% do total · ${STAGES[d.stage]}</div>
+    `);
+  })
+  .on("mouseleave", hideTT)
+  .on("click", (ev, d) => {
+    // Click node → filter to its flow
+    const activeBtn = document.querySelector(".btn.active[data-f]");
+    const currentFilter = activeBtn?.dataset.f;
+    if (currentFilter === d.id) {
+      // toggle off
+      document.querySelectorAll(".btn[data-f]").forEach(b => b.classList.remove("active"));
+      document.querySelector(".btn[data-f='all']").classList.add("active");
+      applyFilter("all");
+    } else {
+      document.querySelectorAll(".btn[data-f]").forEach(b => b.classList.remove("active"));
+      applyFilter(d.id);
+    }
+  });
+
+// ── Filter logic ──────────────────────────────────────────────────────────────
+function getConnected(pivotId) {
+  const nSet = new Set();
+  const lSet = new Set();
+
+  function up(id) {
+    if (nSet.has(id)) return;
+    nSet.add(id);
+    links.forEach((l, i) => {
+      if (l.target.id === id) { lSet.add(i); up(l.source.id); }
+    });
+  }
+  function down(id) {
+    if (nSet.has(id)) return;
+    nSet.add(id);
+    links.forEach((l, i) => {
+      if (l.source.id === id) { lSet.add(i); down(l.target.id); }
+    });
+  }
+  up(pivotId);
+  down(pivotId);
+  return { nSet, lSet };
+}
+
+function applyFilter(f) {
+  if (f === "all") {
+    linkSel.attr("stroke-opacity", 0.25);
+    nodeSel.attr("opacity", 1);
+    return;
+  }
+  const { nSet, lSet } = getConnected(f);
+  linkSel.attr("stroke-opacity", (d, i) => lSet.has(i) ? 0.6  : 0.03);
+  nodeSel.attr("opacity",         d       => nSet.has(d.id) ? 1 : 0.1);
+}
+
+document.querySelectorAll(".btn[data-f]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".btn[data-f]").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    applyFilter(btn.dataset.f);
+  });
+});
+</script>
+</body>
+</html>
