@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escuta o Véio! — Apresentação da Marca</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: #080c18; color: #e2e8f0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; }
+
+    /* ── Header ── */
+    .header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 32px; border-bottom: 1px solid #151e30;
+    }
+    .header h1 { font-size: 17px; font-weight: 700; color: #f1f5ff; letter-spacing: -0.3px; }
+    .header .sub { font-size: 11px; color: #475569; margin-top: 3px; }
+    .header .badge {
+      font-size: 11px; color: #475569; background: #0d1424;
+      border: 1px solid #1e2a40; border-radius: 20px; padding: 4px 12px;
+    }
+    .header .badge span { color: #f59e0b; font-weight: 700; }
+
+    /* ── Pilares / KPIs ── */
+    .pilares-row { display: flex; gap: 12px; padding: 16px 32px; flex-wrap: wrap; }
+    .pilar-card {
+      background: #0d1424; border: 1px solid #151e30; border-radius: 10px;
+      padding: 14px 18px; flex: 1; min-width: 140px;
+      border-top: 2px solid #f59e0b;
+    }
+    .pilar-card .val { font-size: 15px; font-weight: 700; color: #f1f5ff; line-height: 1.3; }
+    .pilar-card .lbl { font-size: 10px; color: #475569; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.6px; }
+    .pilar-card .desc { font-size: 12px; color: #64748b; margin-top: 8px; line-height: 1.5; }
+
+    /* ── Wrapper ── */
+    .wrap { padding: 24px 32px; display: flex; flex-direction: column; gap: 24px; }
+
+    /* ── Section title ── */
+    .sec-title {
+      font-size: 10px; font-weight: 700; color: #475569;
+      text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 12px;
+    }
+
+    /* ── Cards grid ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .grid-6 { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+
+    .card {
+      background: #0d1424; border: 1px solid #151e30; border-radius: 10px; padding: 18px;
+    }
+    .card .card-title {
+      font-size: 12px; font-weight: 700; color: #f1f5ff;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
+    }
+    .card .card-body { font-size: 12px; color: #64748b; line-height: 1.6; }
+
+    /* ── Sobre ── */
+    .sobre-lead {
+      font-size: 16px; font-weight: 600; color: #94a3b8; line-height: 1.6;
+    }
+    .sobre-body {
+      font-size: 13px; color: #475569; line-height: 1.7;
+      border-left: 2px solid #1e2a40; padding-left: 14px;
+    }
+
+    /* ── Marcas ── */
+    .marca-card {
+      background: #0d1424; border: 1px solid #151e30; border-radius: 10px;
+      padding: 16px 12px; text-align: center;
+      font-size: 12px; font-weight: 700; color: #94a3b8;
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+
+    /* ── Tom de voz ── */
+    .tom-col .col-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .tom-col .col-label.sim { color: #4ade80; }
+    .tom-col .col-label.nao { color: #ef4444; }
+
+    .tom-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .tom-list li {
+      font-size: 12px; color: #475569; padding-left: 18px; position: relative; line-height: 1.5;
+    }
+    .tom-list li::before { content: attr(data-m); position: absolute; left: 0; }
+    .tom-list li.sim::before { color: #4ade80; }
+    .tom-list li.nao::before { color: #ef4444; }
+
+    /* ── Frentes ── */
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      background: #0d1424; border: 1px solid #1e2a40; border-radius: 20px;
+      padding: 5px 14px; font-size: 12px; color: #64748b; font-weight: 500;
+    }
+
+    /* ── Hero strip ── */
+    .hero-strip {
+      background: #0d1424; border-bottom: 1px solid #151e30;
+      padding: 32px 32px 28px; text-align: center;
+    }
+    .hero-strip .eyebrow {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: #f59e0b; margin-bottom: 8px;
+    }
+    .hero-strip h2 {
+      font-size: clamp(22px, 4vw, 36px); font-weight: 700;
+      color: #f1f5ff; letter-spacing: -0.5px; margin-bottom: 8px;
+    }
+    .hero-strip .tagline { font-size: 13px; color: #475569; }
+
+    /* ── Divider ── */
+    .divider { border: none; border-top: 1px solid #151e30; }
+
+    /* ── Footer ── */
+    footer {
+      padding: 18px 32px; border-top: 1px solid #151e30;
+      font-size: 11px; color: #1e2a40; text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .wrap { padding: 16px; }
+      .header, .hero-strip, .pilares-row, footer { padding-left: 16px; padding-right: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div>
+      <h1>Escuta o Véio!</h1>
+      <div class="sub">Apresentação da marca · E-commerce de materiais para construção</div>
+    </div>
+    <div class="badge">Segmento: <span>Construção Civil</span></div>
+  </header>
+
+  <!-- Hero strip -->
+  <div class="hero-strip">
+    <p class="eyebrow">Propósito</p>
+    <h2>Novas Soluções para Velhos Problemas!</h2>
+    <p class="tagline">Revendedor oficial · 6 marcas · Tom carismático, educativo e humanizado</p>
+  </div>
+
+  <!-- Pilares de personalidade -->
+  <div class="pilares-row">
+    <div class="pilar-card">
+      <div class="val">Carismático</div>
+      <div class="lbl">Pilar de Marca</div>
+      <div class="desc">Linguagem acessível e humor genuíno sem perder credibilidade técnica.</div>
+    </div>
+    <div class="pilar-card">
+      <div class="val">Educativo</div>
+      <div class="lbl">Pilar de Marca</div>
+      <div class="desc">Ensinamos mais do que vendemos. Quem entende o produto volta mais vezes.</div>
+    </div>
+    <div class="pilar-card">
+      <div class="val">Humanizado</div>
+      <div class="lbl">Pilar de Marca</div>
+      <div class="desc">Falamos com pessoas, não com CPFs. O "véio" é experiente, não ultrapassado.</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <!-- Sobre -->
+    <div>
+      <p class="sec-title">Quem somos</p>
+      <div class="grid-2">
+        <p class="sobre-lead">
+          E-commerce especializado em materiais para construção, unindo a sabedoria de quem entende do ofício com a conveniência do digital.
+        </p>
+        <p class="sobre-body">
+          Somos revendedores oficiais de marcas líderes no setor, oferecendo produtos de qualidade comprovada para profissionais e consumidores finais que valorizam fazer bem feito — da primeira à última camada.
+        </p>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Marcas -->
+    <div>
+      <p class="sec-title">Portfólio · Marcas representadas</p>
+      <div class="grid-6">
+        <div class="marca-card">Elastment</div>
+        <div class="marca-card">Drylevis</div>
+        <div class="marca-card">Smart</div>
+        <div class="marca-card">LT-Shine</div>
+        <div class="marca-card">Hold-Stone</div>
+        <div class="marca-card">Cristal</div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Tom de voz -->
+    <div>
+      <p class="sec-title">Tom de voz</p>
+      <div class="grid-2">
+        <div class="card tom-col">
+          <p class="col-label sim">✓ &nbsp;Sim — somos assim</p>
+          <ul class="tom-list">
+            <li class="sim" data-m="✓">Diretos e sem enrolação</li>
+            <li class="sim" data-m="✓">Técnicos quando necessário, simples sempre</li>
+            <li class="sim" data-m="✓">Próximos e acolhedores</li>
+            <li class="sim" data-m="✓">Com opinião e confiança</li>
+            <li class="sim" data-m="✓">Bem-humorados na medida certa</li>
+          </ul>
+        </div>
+        <div class="card tom-col">
+          <p class="col-label nao">✗ &nbsp;Não — evitamos isso</p>
+          <ul class="tom-list">
+            <li class="nao" data-m="✗">Jargão corporativo vazio</li>
+            <li class="nao" data-m="✗">Tom condescendente ou didático demais</li>
+            <li class="nao" data-m="✗">Exagero nos superlativos ("o melhor do Brasil")</li>
+            <li class="nao" data-m="✗">Linguagem fria ou impessoal</li>
+            <li class="nao" data-m="✗">Humor forçado ou inapropriado</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Frentes de atuação -->
+    <div>
+      <p class="sec-title">Frentes de atuação</p>
+      <div class="tags">
+        <span class="tag">Branding</span>
+        <span class="tag">Modelo de Negócio</span>
+        <span class="tag">Estratégia de Marketing</span>
+        <span class="tag">CRM &amp; CRO</span>
+        <span class="tag">UX</span>
+        <span class="tag">Conteúdo</span>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>Escuta o Véio! &mdash; Novas Soluções para Velhos Problemas!</footer>
+
+</body>
+</html>
